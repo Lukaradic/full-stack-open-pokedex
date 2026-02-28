@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 const PokemonList = ({ pokemonList }) => {
   return (
     <div className="list-container">
-      <h1>Testing new update</h1>
       {pokemonList.map(({ id, name }) => (
         <Link
           key={id}
