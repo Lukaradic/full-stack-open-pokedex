@@ -58,8 +58,10 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "testMatch": [
-      "**/*.jest.*"
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/e2e/",
+      "\\.spec\\.ts$"
     ]
   }
 }
