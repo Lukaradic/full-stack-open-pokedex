@@ -2,8 +2,10 @@ name: Deployment pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
   deploy:
@@ -21,3 +23,44 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
+      - name: E2E
+        run: npm run test:e2e
+
+  deploy-render:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Trigger Render deploy
+        uses: JorgeLNJunior/render-deploy@v1.5.0
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+
+        # name: Playwright Tests
+# on:
+#   push:
+#     branches: [main, master]
+#   pull_request:
+#     branches: [main, master]
+# jobs:
+#   test:
+#     timeout-minutes: 60
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v5
+#       - uses: actions/setup-node@v5
+#         with:
+#           node-version: lts/*
+#       - name: Install dependencies
+#         run: npm ci
+#       - name: Install Playwright Browsers
+#         run: npx playwright install --with-deps
+#       - name: Run Playwright tests
+#         run: npx playwright test
+#       - uses: actions/upload-artifact@v4
+#         if: ${{ !cancelled() }}
+#         with:
+#           name: playwright-report
+#           path: playwright-report/
+#           retention-days: 30
