@@ -61,3 +61,19 @@ jobs:
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Discord notification success
+        uses: rjstone/discord-webhook-notify@v2
+        if: success()
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          title: 'New version of ${{github.repository}} deployed'
+          text: 'to ${{vars.DOMAIN}} by ${{github.triggering_actor}}'
+          color: 3066993
+      - name: Discord notification failure
+        uses: rjstone/discord-webhook-notify@v2
+        if: failure()
+        with:
+          webhookUrl: ${{secrets.DISCORD_WEBHOOK}}
+          title: Build failed
+          text: 'commit ${{github.sha}} by ${{github.triggering_actor}}'
+          color: 15158332
